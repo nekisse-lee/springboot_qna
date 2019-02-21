@@ -1,5 +1,6 @@
 package com.nekisse.com.qna.web;
 
+
 public class User {
 
 
@@ -23,5 +24,15 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "userId='" + userId + '\'' +
+            ", password='" + password + '\'' +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            '}';
     }
 }

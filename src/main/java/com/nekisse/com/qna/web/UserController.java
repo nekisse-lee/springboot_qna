@@ -6,6 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -17,6 +20,29 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "user/login";
+    }
+
+    @PostMapping("login")
+    public String login(String userId, String password, HttpSession session) {
+        User findUser = userRepository.findByUserId(userId);
+        if (findUser == null) {
+            System.out.println("Login failure!");
+            return "redirect:/users/loginForm";
+        }
+        if (!password.equals(findUser.getPassword())) {
+            System.out.println("Login failure!");
+            return "redirect:/users/loginForm";
+        }
+
+        System.out.println("Login Success!");
+        session.setAttribute("user", findUser);
+
+
+        return "redirect:/";
+    }
 
     @GetMapping("/form")
     public String form() {
@@ -47,7 +73,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id , User newUser) {
+    public String update(@PathVariable Long id, User newUser) {
         User user = userRepository.getOne(id);
         user.update(newUser);
         userRepository.save(user);

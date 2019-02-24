@@ -7,8 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -79,17 +77,39 @@ public class UserController {
 
 
     @GetMapping("/{id}/form")
-    public String updateForm(@PathVariable Long id, Model model) {
+    public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
+        Object tempUser = session.getAttribute("userSession");
+        if (tempUser == null) {
+            return "redirect:/users/loginForm";
+        }
+
+        User userSession = (User) tempUser;
+        if (!id.equals(userSession.getId())) {
+            throw  new IllegalStateException("<You can not update other users!!!");
+        }
+
         User user = userRepository.getOne(id);
+//        User user = userRepository.getOne(userSession.getId());
         System.out.println("user = " + user);
         model.addAttribute("user", user);
         return "/user/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, User newUser) {
+    public String update(@PathVariable Long id, User updatedUser, HttpSession session) {
+
+        Object tempUser = session.getAttribute("userSession");
+        if (tempUser == null) {
+            return "redirect:/users/loginForm";
+        }
+
+        User userSession = (User) tempUser;
+        if (!id.equals(userSession.getId())) {
+            throw  new IllegalStateException("You can not update other users!!!");
+        }
+
         User user = userRepository.getOne(id);
-        user.update(newUser);
+        user.update(updatedUser);
         userRepository.save(user);
         return "redirect:/users";
     }

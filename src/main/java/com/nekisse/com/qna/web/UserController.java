@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 import java.util.Optional;
 
 @Controller
@@ -28,19 +29,32 @@ public class UserController {
     @PostMapping("login")
     public String login(String userId, String password, HttpSession session) {
         User findUser = userRepository.findByUserId(userId);
-        if (findUser == null) {
+        if (findUser == null || !password.equals(findUser.getPassword())) {
             System.out.println("Login failure!");
             return "redirect:/users/loginForm";
         }
-        if (!password.equals(findUser.getPassword())) {
+        /*if (!password.equals(findUser.getPassword())) {
             System.out.println("Login failure!");
             return "redirect:/users/loginForm";
-        }
+        }*/
 
         System.out.println("Login Success!");
-        session.setAttribute("user", findUser);
+        session.setAttribute("userSession", findUser);
 
 
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+//        Enumeration<String> attributeNames = session.getAttributeNames();
+//        String sessionName = attributeNames.nextElement();
+//        if (sessionName != null) {
+//            System.out.println("sessionName = " + sessionName);
+//            session.removeAttribute(sessionName);
+//        }
+        session.removeAttribute("userSession");
+        System.out.println("Logout Success!!");
         return "redirect:/";
     }
 

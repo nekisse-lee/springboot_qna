@@ -1,0 +1,1 @@
+insert into USER(ID, USER_ID, PASSWORD, NAME, EMAIL) values ('1','nekisse','test', '이선','nekisse@google.com');

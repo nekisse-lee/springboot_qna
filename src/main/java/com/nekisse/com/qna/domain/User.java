@@ -1,16 +1,13 @@
 package com.nekisse.com.qna.domain;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false, length = 20, unique = true)
@@ -21,6 +18,20 @@ public class User {
     private String name;
 
     private String email;
+
+    public boolean matchId(Long newId) {
+        if (newId == null) {
+            return false;
+        }
+        return newId.equals(id);
+    }
+
+    public boolean matchPassword(String newPassword) {
+        if (newPassword == null) {
+            return false;
+        }
+        return newPassword.equals(password);
+    }
 
 
     public void setUserId(String userId) {

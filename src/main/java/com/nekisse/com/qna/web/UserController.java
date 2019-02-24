@@ -15,6 +15,7 @@ public class UserController {
 
     private final UserRepository userRepository;
 
+
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -26,18 +27,19 @@ public class UserController {
 
     @PostMapping("login")
     public String login(String userId, String password, HttpSession session) {
-        User findUser = userRepository.findByUserId(userId);
-        if (findUser == null || !password.equals(findUser.getPassword())) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
             System.out.println("Login failure!");
             return "redirect:/users/loginForm";
         }
-        /*if (!password.equals(findUser.getPassword())) {
+
+        if (!user.matchPassword(password)) {
             System.out.println("Login failure!");
             return "redirect:/users/loginForm";
-        }*/
+        }
 
         System.out.println("Login Success!");
-        session.setAttribute("userSession", findUser);
+        session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
 
 
         return "redirect:/";
@@ -51,7 +53,7 @@ public class UserController {
 //            System.out.println("sessionName = " + sessionName);
 //            session.removeAttribute(sessionName);
 //        }
-        session.removeAttribute("userSession");
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
         System.out.println("Logout Success!!");
         return "redirect:/";
     }
@@ -78,33 +80,30 @@ public class UserController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
-        Object tempUser = session.getAttribute("userSession");
-        if (tempUser == null) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             return "redirect:/users/loginForm";
         }
 
-        User userSession = (User) tempUser;
-        if (!id.equals(userSession.getId())) {
-            throw  new IllegalStateException("<You can not update other users!!!");
+        User sessionedUser = HttpSessionUtils.getUserFromSession(session);
+        if (!sessionedUser.matchId(id)) {
+            throw new IllegalStateException("You can't update the anther user");
         }
 
         User user = userRepository.getOne(id);
-//        User user = userRepository.getOne(userSession.getId());
-        System.out.println("user = " + user);
         model.addAttribute("user", user);
         return "/user/updateForm";
     }
 
+
     @PutMapping("/{id}")
     public String update(@PathVariable Long id, User updatedUser, HttpSession session) {
 
-        Object tempUser = session.getAttribute("userSession");
-        if (tempUser == null) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             return "redirect:/users/loginForm";
         }
 
-        User userSession = (User) tempUser;
-        if (!id.equals(userSession.getId())) {
+        User userSession = HttpSessionUtils.getUserFromSession(session);
+        if (!userSession.matchId(id)) {
             throw  new IllegalStateException("You can not update other users!!!");
         }
 

@@ -1,8 +1,6 @@
 package com.nekisse.com.qna.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Question {
@@ -11,8 +9,9 @@ public class Question {
     @GeneratedValue
     private Long id;
 
-
-    private String writer;
+    @ManyToOne
+    @JoinColumn(foreignKey = )
+    private User writer;
 
     private String title;
 

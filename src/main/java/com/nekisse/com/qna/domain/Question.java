@@ -3,6 +3,7 @@ package com.nekisse.com.qna.domain;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +24,15 @@ public class Question {
     private String contents;
 
     private LocalDateTime createDate;
+
+
+    @OneToMany(mappedBy = "question")
+    @OrderBy("id asc")
+    private List<Answer> answers;
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
 
     public Long getId() {
         return id;

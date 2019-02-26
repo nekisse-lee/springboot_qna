@@ -3,6 +3,7 @@ package com.nekisse.com.qna.domain;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Entity
 public class Question {
@@ -17,6 +18,8 @@ public class Question {
 
     private String title;
 
+
+    @Lob
     private String contents;
 
     private LocalDateTime createDate;
@@ -63,4 +66,9 @@ public class Question {
         this.contents = newContents;
 
     }
+
+    public boolean isSameWriter(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
+
 }

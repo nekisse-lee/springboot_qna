@@ -67,6 +67,9 @@ public class Answer {
         }
         return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,4 +82,10 @@ public class Answer {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
+    public boolean isSameWriter(User loginUser) {
+       return this.writer.equals(loginUser);
+    }
+
 }

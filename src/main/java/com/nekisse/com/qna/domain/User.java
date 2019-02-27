@@ -3,17 +3,15 @@ package com.nekisse.com.qna.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class User {
+public class User extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     @Column(nullable = false, length = 20, unique = true)
     private String userId;
@@ -30,7 +28,7 @@ public class User {
         if (newId == null) {
             return false;
         }
-        return newId.equals(id);
+        return newId.equals(getId());
     }
 
     public boolean matchPassword(String newPassword) {
@@ -57,9 +55,6 @@ public class User {
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public String getUserId() {
         return userId;
@@ -84,15 +79,13 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id.equals(user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public String toString() {
+        return "User{" +
+            super.toString() + '\'' +
+            "userId='" + userId + '\'' +
+            ", password='" + password + '\'' +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            '}';
     }
 }

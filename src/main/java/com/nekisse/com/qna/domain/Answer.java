@@ -6,32 +6,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
-public class Answer {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
+public class Answer extends AbstractEntity {
 
 
     @ManyToOne
-    @JoinColumn(foreignKey =  @ForeignKey(name = "fk_answer_writer"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
     private User writer;
 
 
     @ManyToOne
-    @JoinColumn(foreignKey =  @ForeignKey(name = "fk_answer_to_question"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_question"))
     private Question question;
 
     @Lob
     private String contents;
 
-    private LocalDateTime createDate;
-
-
-    public Long getId() {
-        return id;
-    }
 
     public User getWriter() {
         return writer;
@@ -45,47 +34,29 @@ public class Answer {
         return contents;
     }
 
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
 
     public Answer() {
     }
 
-    public Answer(User writer,Question question, String contents) {
+    public Answer(User writer, Question question, String contents) {
         this.writer = writer;
         this.question = question;
         this.contents = contents;
-        this.createDate = LocalDateTime.now();
-    }
-
-
-
-    public String getFormattedCreateDate() {
-        if (createDate == null) {
-            return "";
-        }
-        return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-    }
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Answer answer = (Answer) o;
-        return Objects.equals(id, answer.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
 
     public boolean isSameWriter(User loginUser) {
-       return this.writer.equals(loginUser);
+        return this.writer.equals(loginUser);
     }
 
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+            super.toString() +
+             "writer=" + writer +
+            ", question=" + question +
+            ", contents='" + contents + '\'' +
+            '}';
+    }
 }

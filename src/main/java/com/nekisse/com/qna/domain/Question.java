@@ -32,6 +32,10 @@ public class Question {
     @JsonProperty
     private String contents;
 
+    @JsonProperty
+    private Integer countOfAnswer = 0;
+
+
     private LocalDateTime createDate;
 
 
@@ -39,6 +43,14 @@ public class Question {
     @OrderBy("id desc")
     @JsonIgnore
     private List<Answer> answers;
+
+    public void addAnswer() {
+        this.countOfAnswer+=1;
+    }
+
+    public void deleteAnswer() {
+        this.countOfAnswer -= 1;
+    }
 
     public List<Answer> getAnswers() {
         return answers;
@@ -62,6 +74,10 @@ public class Question {
 
     public LocalDateTime getCreateDate() {
         return createDate;
+    }
+
+    public Integer getCountOfAnswer() {
+        return countOfAnswer;
     }
 
     public Question() {

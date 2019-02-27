@@ -6,16 +6,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
-@RequestMapping("/questions/{questionId}/answers")
-public class AnswerController {
+@RestController
+@RequestMapping("/api/questions/{questionId}/answers")
+public class ApiAnswerController {
     private final AnswerRepository answerRepository;
 
     @Autowired
-    public AnswerController(AnswerRepository answerRepository, QuestionRepository questionRepository) {
+    public ApiAnswerController(AnswerRepository answerRepository, QuestionRepository questionRepository) {
         this.answerRepository = answerRepository;
         this.questionRepository = questionRepository;
     }
@@ -23,16 +24,16 @@ public class AnswerController {
     private final QuestionRepository questionRepository;
 
     @PostMapping("")
-    public String create(@PathVariable Long questionId, String contents, HttpSession session) {
+    public Answer create(@PathVariable Long questionId, String contents, HttpSession session) {
         if (!HttpSessionUtils.isLoginUser(session)) {
-            return "/users/loginForm";
+            return null;
         }
+
         User loginUser = HttpSessionUtils.getUserFromSession(session);
         Question question = questionRepository.getOne(questionId);
         Answer answer = new Answer(loginUser, question, contents);
         answerRepository.save(answer);
-
-        return String.format("redirect:/questions/%d", questionId);
+        return answer;
     }
 
 

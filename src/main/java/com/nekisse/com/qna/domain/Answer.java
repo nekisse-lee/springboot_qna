@@ -29,6 +29,26 @@ public class Answer {
     private LocalDateTime createDate;
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public User getWriter() {
+        return writer;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
     public Answer() {
     }
 

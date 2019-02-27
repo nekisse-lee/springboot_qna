@@ -1,10 +1,14 @@
 package com.nekisse.com.qna.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
@@ -14,6 +18,8 @@ public class User {
     @Column(nullable = false, length = 20, unique = true)
     private String userId;
 
+
+    @JsonIgnore
     private String password;
 
     private String name;

@@ -1,5 +1,9 @@
 package com.nekisse.com.qna.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,27 +11,33 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Question {
 
     @Id
     @GeneratedValue
+    @JsonProperty
     private Long id;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    @JsonProperty
     private User writer;
 
+    @JsonProperty
     private String title;
 
 
     @Lob
+    @JsonProperty
     private String contents;
 
     private LocalDateTime createDate;
 
 
     @OneToMany(mappedBy = "question")
-    @OrderBy("id asc")
+    @OrderBy("id desc")
+    @JsonIgnore
     private List<Answer> answers;
 
     public List<Answer> getAnswers() {
